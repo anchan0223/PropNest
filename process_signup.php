@@ -11,7 +11,7 @@ $first_name = $_POST['first_name'];
 $last_name = $_POST['last_name'];
 $email = $_POST['email'];
 $username = $_POST['username'];
-$password = password_hash($_POST['password'], PASSWORD_BCRYPT); // Encrypt the password
+$password = password_hash($_POST['password'], PASSWORD_BCRYPT);
 $role = $_POST['role'];
 
 // Insert Data into Database
@@ -25,5 +25,3 @@ if ($conn->query($sql) === TRUE) {
 }
 
 $conn->close();
-?>
-
