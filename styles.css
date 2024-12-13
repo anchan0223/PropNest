@@ -2,23 +2,91 @@
 body {
   font-family: Arial, sans-serif;
   margin: 20px;
+  height: 100vh;
   background: linear-gradient(to bottom, #f4e2d8, #fad0c4);
   color: #333;
 }
+header {
+    color: #fff;
+    text-align: center;
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    height: 15px; 
+  }
+  
+.container {
+    max-width: 1100px;
+    margin: 20px auto;
+    max-height: auto;
+    padding: 0 20px;
+    
+  }
+
+  h2{
+    text-align: center;
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+  }
+  h3 {
+    text-align: center;
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+  }
+  p{
+    text-align: center;
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+  }
+  ul {
+    list-style-type: disc; 
+    padding-left: 0; 
+    text-align: center; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+  }
+  
+  ul li {
+    text-align: center; 
+    margin: 10px 0; 
+  }
+  
+  
 
 h1,
 h2,
 h3 {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   color: #444;
 }
+section {
+    background: linear-gradient(to bottom, #f6ad85, #fcc4b5);
+    padding: 30px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
 
 a.button {
-  display: inline-block;
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: #fff;
-  text-decoration: none;
-  border-radius: 5px;
+    display: inline-block;
+    background-color: #007bff;
+    color: #fff;
+    text-align: center;
+    justify-content: center; 
+    align-items: center; 
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    margin-left: 500px; 
+   margin-right: 500px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .seller-button {
@@ -31,7 +99,9 @@ a.button {
 }
 
 a.button:hover {
-  background-color: #0056b3;
+    background-color: #0056b3;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 form {
