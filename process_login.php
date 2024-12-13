@@ -1,8 +1,12 @@
 <?php
+
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 session_start(); // Start session to store user data if logged in
 
 // Database connection
-$pdo = new PDO('mysql:host=localhost;dbname=your_database', 'username', 'password');
+$pdo = new PDO('mysql:host=localhost;dbname=aharvey30', 'aharvey30', 'aharvey30');
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 // Check if form is submitted

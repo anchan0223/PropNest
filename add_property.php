@@ -1,15 +1,15 @@
 <?php
 session_start();
-if (!isset($_SESSION['userID'])) {
-    header("Location: login.php");
+if (!isset($_SESSION['user_id'])) {
+    header("Location: process_login.php");
     exit();
 }
 
-$userID = $_SESSION['userID'];
+$userID = $_SESSION['user_id'];
 $host = "localhost";
-$user = "momer3";
-$pass = "momer3";
-$dbname = "momer3";
+$user = "aharvey30";
+$pass = "aharvey30";
+$dbname = "aharvey30";
 
 // Database connection
 $conn = new mysqli($host, $user, $pass, $dbname);
@@ -27,7 +27,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $hasGarden = isset($_POST['hasGarden']) ? 1 : 0;
     $hasParking = isset($_POST['hasParking']) ? 1 : 0;
     $proximityFacilities = trim($_POST['proximityFacilities']);
-    $proximityMainRoads = trim($_POST['proximityMainRoads']);
     $price = isset($_POST['price']) ? trim($_POST['price']) : null; // Ensure price is provided
 
   
@@ -43,13 +42,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
     
     // Insert property details into the database
-    $sql = "INSERT INTO Properties (userID, location, age, floorPlan, numBedrooms, numBathrooms, hasGarden, hasParking, proximityToTowns, proximityToMainRoads, imagePath, price)
+    $sql = "INSERT INTO Properties (userID, location, age, floorPlan, numBedrooms, numBathrooms, hasGarden, hasParking, proximityToTowns, imagePath, price)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("isiiissssdssd", $userID, $location, $age, $floorPlan, $bedrooms, $bathrooms, $hasGarden, $hasParking, $proximityFacilities, $proximityMainRoads, $imagePath, $price);
+    $stmt->bind_param("isiiissssdssd", $userID, $location, $age, $floorPlan, $bedrooms, $bathrooms, $hasGarden, $hasParking, $proximityFacilities,  $imagePath, $price);
 
     if ($stmt->execute()) {
-        header("Location: dashboard.php");
+        header("Location: ListingsPage.html");
         exit();
     } else {
         echo "Error: " . $stmt->error;

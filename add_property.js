@@ -13,7 +13,7 @@ document.getElementById('addPropertyForm').addEventListener('submit', function (
     .then(data => {
       if (data.success) {
         alert('Property added successfully!');
-        window.location.href = 'seller_dashboard.html'; // Redirect to the seller dashboard after successful submission
+        window.location.href = 'ListingsPage.html'; // Redirect to the seller dashboard after successful submission
       } else {
         alert('Failed to add property. Please try again.');
       }
