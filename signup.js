@@ -46,5 +46,5 @@ document
     alert("Registration successful!");
     document.getElementById("registrationForm").reset();
 
-    window.location.href = "index.html";
+    window.location.href = "login.html";
   });
