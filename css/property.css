@@ -1,0 +1,100 @@
+/* add.css */
+
+/* Reset some default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Set the background color and font for the page */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #d3d3f2;
+    color: #333;
+    padding: 20px;
+}
+
+/* Center the form on the page */
+h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+/* Style the form container */
+form {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Add some space and style to labels */
+label {
+    font-size: 16px;
+    margin-bottom: 8px;
+    display: inline-block;
+    color: #333;
+}
+
+/* Style input fields */
+input[type="text"],
+input[type="number"],
+input[type="file"],
+input[type="checkbox"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+/* Style submit button */
+input[type="submit"] {
+    background-color: #3498db;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s;
+}
+
+input[type="submit"]:hover {
+    background-color: #2980b9;
+}
+
+/* Style the checkbox inputs */
+input[type="checkbox"] {
+    width: auto;
+    margin-right: 10px;
+}
+
+/* Style the file input */
+input[type="file"] {
+    border: none;
+    padding: 5px;
+    background-color: #f7f7f7;
+}
+
+/* Add space between inputs */
+input[type="text"],
+input[type="number"],
+input[type="file"],
+input[type="checkbox"] {
+    margin-top: 8px;
+}
+
+/* Add some spacing between form elements */
+form > label,
+form > input {
+    margin-top: 10px;
+}
+
+

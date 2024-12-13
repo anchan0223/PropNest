@@ -3,46 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Listings Page</title>
-    <link rel="stylesheet" href="styles.css" />
+    <title>Seller Dashboard</title>
+    <link rel="stylesheet" href="css/styles.css" />
   </head>
   <body>
     <header>
-      <h1>Find Your Dream Home with PropNest!</h1>
+      <h1>Your Properties</h1>
       <nav>
-        <!-- TODO ADD SELLER ADD PROPERTY PAGE/LOGIC -->
-        <a class="seller-button" href="...">Seller? Add Properties Here!</a>
+        <a href="add_property.html" class="add-property-button">+ Add New Property</a>
       </nav>
     </header>
 
     <main>
-      <section id="listings">
-        <!-- PROPERTY EXAMPLES -->
-        <h2>Available Listings</h2>
-        <div class="property-grid">
-          <div class="property-card">
-            <img src="property1.jpg" alt="Property 1" class="property-image" />
-            <h3>Modern Apartment</h3>
-            <p class="price">$450,000</p>
-            <p class="location">New York City</p>
-            <a class="button" href="property-detail.html">View Details</a>
-          </div>
-
-          <div class="property-card">
-            <img src="property2.jpg" alt="Property 2" class="property-image" />
-            <h3>Cozy Suburban Home</h3>
-            <p class="price">$320,000</p>
-            <p class="location">Austin, Texas</p>
-            <a class="button" href="property-detail.html">View Details</a>
-          </div>
-
-          <div class="property-card">
-            <img src="property3.jpg" alt="Property 3" class="property-image" />
-            <h3>Beachfront Villa</h3>
-            <p class="price">$1,200,000</p>
-            <p class="location">Malibu, California</p>
-            <a class="button" href="property-detail.html">View Details</a>
-          </div>
+      <section id="properties">
+        <div id="properties-grid">
+          <!-- Property cards will be dynamically populated here -->
         </div>
       </section>
     </main>
@@ -50,5 +25,8 @@
     <footer>
       <p>&copy; 2024 Real Estate Platform</p>
     </footer>
+
+    <script src="seller_dashboard.js"></script>
   </body>
 </html>
+
