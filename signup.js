@@ -11,8 +11,8 @@ document
     const password = document.getElementById("password").value;
     const role = document.getElementById("role").value;
 
-    // Basic password hashing (for demonstration purposes, in real applications use bcrypt or another secure hashing method)
-    const hashedPassword = btoa(password); // Using base64 encoding as a simple example (NOT secure in real-world apps!)
+    // Basic password hashing (
+    const hashedPassword = btoa(password);
 
     // Prepare user data
     const userData = {
@@ -46,6 +46,5 @@ document
     alert("Registration successful!");
     document.getElementById("registrationForm").reset();
 
-    // Optionally, redirect to another page (e.g., the home page)
     window.location.href = "index.html";
   });

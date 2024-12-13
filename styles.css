@@ -1,7 +1,8 @@
+/* General Styles */
 body {
   font-family: Arial, sans-serif;
   margin: 20px;
-  background-color: #f4f4f4;
+  background: linear-gradient(to bottom, #f4e2d8, #fad0c4);
   color: #333;
 }
 
@@ -15,6 +16,15 @@ a.button {
   display: inline-block;
   padding: 10px 20px;
   background-color: #007bff;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px;
+}
+
+.seller-button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: green;
   color: #fff;
   text-decoration: none;
   border-radius: 5px;
@@ -57,40 +67,81 @@ button:hover {
   background-color: #218838;
 }
 
-/* Listings Page Styles */
 #listings {
   max-width: 800px;
   margin: 20px auto;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.8);
   padding: 20px;
-  border-radius: 5px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Property Card Styles */
+.property-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  justify-content: center;
+  max-width: 100%;
+  margin: 0 auto;
 }
 
 .property-card {
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  margin-bottom: 20px;
-  padding: 15px;
+  aspect-ratio: 1 / 1;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 10px;
   background-color: #fff;
   text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+}
+
+.property-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
 }
 
 .property-card img.property-image {
-  max-width: 100%;
-  border-radius: 5px;
-  margin-bottom: 15px;
+  width: 100%;
+  height: 50%;
+  object-fit: cover;
+  border-radius: 10px 10px 0 0;
 }
 
 .property-card h3 {
+  font-size: 1.2em;
   color: #444;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 
 .property-card p {
   margin: 5px 0;
+  font-size: 0.9em;
+  color: #666;
+}
+
+.property-card .price {
+  color: #28a745;
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+.property-card .location {
+  color: #888;
+  font-style: italic;
 }
 
 .property-card .button {
   margin-top: 10px;
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.property-card .button:hover {
+  background-color: #0056b3;
 }
