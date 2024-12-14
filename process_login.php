@@ -1,50 +1,57 @@
 <?php
 session_start();
 
-// Database connection
-$conn = new mysqli("localhost", "root", "", "user_portal");
+$host = "localhost";
+$user = "aharvey30";
+$pass = "aharvey30";
+$dbname = "aharvey30";
 
+// Database connection
+$conn = new mysqli($host, $user, $pass, $dbname);
+
+// Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Check if form is submitted
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $usernameOrEmail = $_POST['username_or_email'];
-    $password = $_POST['password'];
+    $username = trim($_POST['username']);
+    $password = trim($_POST['password']);
 
-    // Query to check if username or email exists
-    $sql = "SELECT * FROM Users WHERE username = ? OR email = ?";
+    // Query to fetch user details
+    $sql = "SELECT id, username, password, usertype FROM Users WHERE username = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ss", $usernameOrEmail, $usernameOrEmail); // binding username/email
-
+    $stmt->bind_param("s", $username);
     $stmt->execute();
-    $result = $stmt->get_result();
+    $stmt->store_result();
 
-    if ($result->num_rows > 0) {
-        $user = $result->fetch_assoc();
+    if ($stmt->num_rows === 1) {
+        $stmt->bind_result($userID, $username, $hashedPassword, $usertype);
+        $stmt->fetch();
 
-        // Verify password
-        if (password_verify($password, $user['password'])) {
-            // Password is correct, set session variables
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['username'] = $user['username'];
-            $_SESSION['usertype'] = $user['usertype'];
+        // Verify the password
+        if (password_verify($password, $hashedPassword)) {
+            // Store user info in session
+            $_SESSION['userID'] = $userID;
+            $_SESSION['username'] = $username;
+            $_SESSION['usertype'] = $usertype;
 
-            // Redirect based on user type
-            if ($user['usertype'] == 'seller') {
-                header('Location: ListingsPage.html');
-            } elseif ($user['usertype'] == 'buyer') {
-                header('Location: ListingsPage.html');
-            } elseif ($user['usertype'] == 'admin') {
-                header('Location: ListingsPage.html');
+            // Redirect based on usertype
+            if ($usertype === 'seller') {
+                header("Location: ListingsPage.html");
+            } elseif ($usertype === 'buyer') {
+                header("Location: ListingsPage.html");
+            } elseif ($usertype === 'admin') {
+                header("Location: ListingsPage.html");
+            } else {
+                header("Location: ListingsPage.html"); // usertype invaild redirect
             }
             exit();
         } else {
             echo "Invalid password.";
         }
     } else {
-        echo "User not found.";
+        echo "No user found with that username.";
     }
 
     $stmt->close();
@@ -53,11 +60,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 $conn->close();
 ?>
 
-<form method="POST" action="login.php">
-    <input type="text" name="username_or_email" placeholder="Username or Email" required>
-    <input type="password" name="password" placeholder="Password" required>
-    <button type="submit">Login</button>
-</form>
+
+
 
 
 

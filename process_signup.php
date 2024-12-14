@@ -1,71 +1,79 @@
 <?php
-// Database Connection
-$conn = new mysqli("localhost", "root", "", "user_portal");
+$host = "localhost";
+$user = "aharvey30";
+$pass = "aharvey30";
+$dbname = "aharvey30";
+
+// Database connection
+$conn = new mysqli($host, $user, $pass, $dbname);
 
 // Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Collect Form Data
-$first_name = $_POST['first_name'];
-$last_name = $_POST['last_name'];
-$email = $_POST['email'];
-$username = $_POST['username'];
-$password = password_hash($_POST['password'], PASSWORD_BCRYPT); // Hash the password
-$role = $_POST['role']; // Buyer, Seller, or Admin
-
-// Check if Email Already Exists
-$sql_check_email = "SELECT * FROM users WHERE email = ?";
-$stmt = $conn->prepare($sql_check_email);
-$stmt->bind_param("s", $email);
-$stmt->execute();
-$result = $stmt->get_result();
-
-if ($result->num_rows > 0) {
-    // Email already exists, show error message
-    echo "This email is already associated with an account. Please use a different email.";
-    exit();
+// Create Users table if it doesn't exist
+$sql = "CREATE TABLE IF NOT EXISTS Users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    usertype ENUM('buyer', 'seller', 'admin') NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)";
+if ($conn->query($sql) === FALSE) {
+    die("Error creating table: " . $conn->error);
 }
 
-// Check if Username Already Exists
-$sql_check_username = "SELECT * FROM users WHERE username = ?";
-$stmt = $conn->prepare($sql_check_username);
-$stmt->bind_param("s", $username);
-$stmt->execute();
-$result = $stmt->get_result();
+// Check if form is submitted
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $username = trim($_POST['username']);
+    $email = trim($_POST['email']);
+    $password = trim($_POST['password']);
+    $confirmpassword = trim($_POST['confirmpassword']);
+    $usertype = trim($_POST['usertype']);
 
-if ($result->num_rows > 0) {
-    // Username already exists, show error message
-    echo "This username is already taken. Please choose a different username.";
-    exit();
-}
-
-// Insert Data into Database
-$sql_insert = "INSERT INTO users (first_name, last_name, email, username, password, usertype) 
-               VALUES (?, ?, ?, ?, ?, ?)";
-$stmt = $conn->prepare($sql_insert);
-$stmt->bind_param("ssssss", $first_name, $last_name, $email, $username, $password, $role);
-
-if ($stmt->execute()) {
-    // Registration successful, now start session and redirect based on role
-    session_start();
-    $_SESSION['user_id'] = $stmt->insert_id; // Store the user ID in session
-    $_SESSION['username'] = $username; // Store the username in session
-    
-    if ($role == 'Seller') {
-        header('Location: ListingsPage.html');
-    } elseif ($role == 'Buyer') {
-        header('Location: buyer_dashboard.html');
-    } elseif ($role == 'Admin') {
-        header('Location: admin_dashboard.html');
+    // Server-side check if passwords match
+    if ($password !== $confirmpassword) {
+        die("Passwords do not match. Please go back and try again.");
     }
-    exit(); // Make sure no further code is executed
-} else {
-    echo "Error: " . $sql_insert . "<br>" . $conn->error;
+
+    // Check if the username or email already exists
+    $checkSql = "SELECT * FROM Users WHERE username = ? OR email = ?";
+    $stmt = $conn->prepare($checkSql);
+    $stmt->bind_param("ss", $username, $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        die("Username or email already exists. Please choose a different one.");
+    }
+
+    // Encrypt password before saving to the database
+    $hashed_password = password_hash($password, PASSWORD_BCRYPT);
+
+    // Insert data into the database
+    $sql = "INSERT INTO Users (username, email, password, usertype)
+            VALUES (?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ssss", $username, $email, $hashed_password, $usertype);
+
+    if ($stmt->execute()) {
+         // Get the user ID of the newly registered user
+         $userID = $conn->insert_id;
+         // Store user ID in session
+        session_start();
+        $_SESSION['userID'] = $userID;
+        
+        echo "Registration successful! Redirecting to Login page...";
+        header("Location: login.html");
+    } else {
+        echo "Error: " . $stmt->error;
+    }
+
+    $stmt->close();
 }
 
-$stmt->close();
 $conn->close();
 ?>
 
