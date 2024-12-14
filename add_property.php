@@ -1,7 +1,8 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id'])) {
-    header("Location: process_login.php");
+    // If not logged in, redirect to login page
+    header("Location: login.html");
     exit();
 }
 
@@ -19,34 +20,30 @@ if ($conn->connect_error) {
 
 // Check if form is submitted
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    // Get the form data
     $location = trim($_POST['location']);
-    $age = trim($_POST['age']);
-    $floorPlan = trim($_POST['floorPlan']);
+    $price = trim($_POST['price']);
     $bedrooms = trim($_POST['bedrooms']);
     $bathrooms = trim($_POST['bathrooms']);
     $hasGarden = isset($_POST['hasGarden']) ? 1 : 0;
     $hasParking = isset($_POST['hasParking']) ? 1 : 0;
     $proximityFacilities = trim($_POST['proximityFacilities']);
-    $price = isset($_POST['price']) ? trim($_POST['price']) : null; // Ensure price is provided
-
-  
-
-    // Handle image upload
-    if (isset($_FILES['propertyImage']) && $_FILES['propertyImage']['error'] === 0) {
-        $imagePath = 'uploads/' . basename($_FILES['propertyImage']['name']);
-        if (!move_uploaded_file($_FILES['propertyImage']['tmp_name'], $imagePath)) {
-            die("Failed to move uploaded file.");
-        }
-    } else {
-        die("Image upload failed. Please try again.");
-    }
     
-    // Insert property details into the database
-    $sql = "INSERT INTO Properties (userID, location, age, floorPlan, numBedrooms, numBathrooms, hasGarden, hasParking, proximityToTowns, imagePath, price)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("isiiissssdssd", $userID, $location, $age, $floorPlan, $bedrooms, $bathrooms, $hasGarden, $hasParking, $proximityFacilities,  $imagePath, $price);
+    // Get the image URL from the form
+    $imageURL = isset($_POST['image_url']) ? trim($_POST['image_url']) : null;
 
+    // Validate the image URL (optional)
+    if ($imageURL && !filter_var($imageURL, FILTER_VALIDATE_URL)) {
+        die("Invalid image URL provided.");
+    }
+
+    // Insert property details into the database
+    $sql = "INSERT INTO properties (user_id, location, price, bedrooms, bathrooms, parking, garden, facilities, image_url)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("isiiissss", $userID, $location, $price, $bedrooms, $bathrooms, $hasParking, $hasGarden, $proximityFacilities, $imageURL);
+
+    // Execute the query and check for success
     if ($stmt->execute()) {
         header("Location: ListingsPage.html");
         exit();
@@ -57,5 +54,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $stmt->close();
 }
 
+// Close the database connection
 $conn->close();
+?>
+
 

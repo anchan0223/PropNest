@@ -1,51 +1,68 @@
 <?php
-
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
-session_start(); // Start session to store user data if logged in
+session_start();
 
 // Database connection
-$pdo = new PDO('mysql:host=localhost;dbname=aharvey30', 'aharvey30', 'aharvey30');
-$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+$conn = new mysqli("localhost", "root", "", "user_portal");
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
 
 // Check if form is submitted
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $username = $_POST['username'];
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $usernameOrEmail = $_POST['username_or_email'];
     $password = $_POST['password'];
 
-    // Debugging: Check if the form data is received
-    // echo "Username: " . $username . "<br>";
-    // echo "Password: " . $password . "<br>";
+    // Query to check if username or email exists
+    $sql = "SELECT * FROM Users WHERE username = ? OR email = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ss", $usernameOrEmail, $usernameOrEmail); // binding username/email
 
-    // Fetch user data from the database
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
-    $stmt->execute([$username]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-    // Debugging: Check if the user is found in the database
-    if ($user) {
-        // echo "User found in database.<br>"; // Debugging
+    if ($result->num_rows > 0) {
+        $user = $result->fetch_assoc();
 
-        // Check if password is correct
+        // Verify password
         if (password_verify($password, $user['password'])) {
-            // Store user data in session
+            // Password is correct, set session variables
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['username'];
-            $_SESSION['role'] = $user['role'];
+            $_SESSION['usertype'] = $user['usertype'];
 
-            // Redirect to listingpage.html
-            header('Location: ListingsPage.html');
+            // Redirect based on user type
+            if ($user['usertype'] == 'seller') {
+                header('Location: ListingsPage.html');
+            } elseif ($user['usertype'] == 'buyer') {
+                header('Location: ListingsPage.html');
+            } elseif ($user['usertype'] == 'admin') {
+                header('Location: ListingsPage.html');
+            }
             exit();
         } else {
-            // If password is incorrect
-            echo "Incorrect password. Please try again.";
+            echo "Invalid password.";
         }
     } else {
-        // If user doesn't exist
-        echo "No account found with that username.";
+        echo "User not found.";
     }
+
+    $stmt->close();
 }
+
+$conn->close();
 ?>
+
+<form method="POST" action="login.php">
+    <input type="text" name="username_or_email" placeholder="Username or Email" required>
+    <input type="password" name="password" placeholder="Password" required>
+    <button type="submit">Login</button>
+</form>
+
+
+
+
+
+
 
 
