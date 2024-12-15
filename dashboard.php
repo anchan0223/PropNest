@@ -24,12 +24,12 @@ $result = $stmt->get_result();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Seller Dashboard</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body>
     <div class="container">
         <div class="top-bar">
-            <h1>Luxe Listings</h1>
+            <h1>PropNest!</h1>
             <a href="process_login.php" class="login-btn">Log Out</a>
         </div>
         <h2>My Properties</h2>
