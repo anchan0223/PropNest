@@ -4,17 +4,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Add event listener to the "+" button
     document.getElementById('add-property').addEventListener('click', () => {
-        window.location.href = 'add-property.php';  // Redirect to the Add Property page
+        window.location.href = 'add-property.php'; 
     });
 });
 
 function fetchProperties() {
-    fetch('fetch_properties.php')  // Fetch the properties from the server
+    fetch('fetch_properties.php') 
         .then(response => response.json())
         .then(data => {
             const propertyCardsContainer = document.getElementById('property-cards');
-            propertyCardsContainer.innerHTML = '';  // Clear the container before adding new cards
-
+            propertyCardsContainer.innerHTML = '';  
             if (data.length === 0) {
                 propertyCardsContainer.innerHTML = '<p>No properties added. Click "+" to add a new property.</p>';
             } else {
@@ -48,13 +47,14 @@ function editProperty(propertyId) {
 
 function deleteProperty(propertyId) {
     fetch(`delete_property.php?id=${propertyId}`, {
-        method: 'GET',  // Use GET for now for simplicity, as DELETE can sometimes be blocked
+        method: 'GET',  
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
             alert('Property deleted successfully');
-            location.reload(); // Reload the page to remove the deleted property
+            // Reload the page to remove the deleted property
+            location.reload(); 
         } else {
             alert('Failed to delete property: ' + data.error);
         }

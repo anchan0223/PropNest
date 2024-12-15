@@ -7,7 +7,6 @@ $_SESSION['user_id'] = 1; // Replace 1 with an appropriate user ID from your dat
 
 // Handle form submission to add a property
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Get form values and sanitize inputs
     $user_id = $_SESSION['user_id'];
     $location = $_POST['location'];
     $price = $_POST['price'];

@@ -22,11 +22,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Redirect based on user role
             if ($user['usertype'] === 'admin') {
-                header('Location: dashboard.php'); //admin dashboard if we did that milestone but for right now it directs to seller dashboard
+                //admin dashboard if we did that milestone but for right now it directs to seller dashboard
+                header('Location: dashboard.php');
             } elseif ($user['usertype'] === 'seller') {
-                header('Location: dashboard.php'); 
+                header('Location: dashboard.php');
             } else {
-                header('Location: dashboard.php'); //buyer dashboard if we did that milestone but for right now it directs to seller dashboard
+                //buyer dashboard if we did that milestone but for right now it directs to seller dashboard
+                header('Location: dashboard.php');
             }
             exit();
         } else {
@@ -38,15 +40,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 }
-?>
-
-
-
-
-
-
-
-
-
-
-
