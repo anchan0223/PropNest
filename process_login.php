@@ -1,63 +1,43 @@
 <?php
 session_start();
+include('db.php'); // Include the database connection
 
-$host = "localhost";
-$user = "aharvey30";
-$pass = "aharvey30";
-$dbname = "aharvey30";
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
 
-// Database connection
-$conn = new mysqli($host, $user, $pass, $dbname);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $username = trim($_POST['username']);
-    $password = trim($_POST['password']);
-
-    // Query to fetch user details
-    $sql = "SELECT id, username, password, usertype FROM Users WHERE username = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $username);
+    $stmt = $conn->prepare("SELECT id, password, usertype FROM Users WHERE username = ?");
+    $stmt->bind_param('s', $username);
     $stmt->execute();
-    $stmt->store_result();
+    $result = $stmt->get_result();
 
-    if ($stmt->num_rows === 1) {
-        $stmt->bind_result($userID, $username, $hashedPassword, $usertype);
-        $stmt->fetch();
+    if ($result->num_rows > 0) {
+        $user = $result->fetch_assoc();
 
         // Verify the password
-        if (password_verify($password, $hashedPassword)) {
-            // Store user info in session
-            $_SESSION['userID'] = $userID;
-            $_SESSION['username'] = $username;
-            $_SESSION['usertype'] = $usertype;
+        if (password_verify($password, $user['password'])) {
+            // Set session variables
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['usertype'] = $user['usertype'];
 
-            // Redirect based on usertype
-            if ($usertype === 'seller') {
-                header("Location: ListingsPage.html");
-            } elseif ($usertype === 'buyer') {
-                header("Location: ListingsPage.html");
-            } elseif ($usertype === 'admin') {
-                header("Location: ListingsPage.html");
+            // Redirect based on user role
+            if ($user['usertype'] === 'admin') {
+                header('Location: dashboard.php'); //admin dashboard if we did that milestone but for right now it directs to seller dashboard
+            } elseif ($user['usertype'] === 'seller') {
+                header('Location: dashboard.php'); 
             } else {
-                header("Location: ListingsPage.html"); // usertype invaild redirect
+                header('Location: dashboard.php'); //buyer dashboard if we did that milestone but for right now it directs to seller dashboard
             }
             exit();
         } else {
-            echo "Invalid password.";
+            header('Location: process_login.php?error=Incorrect password');
+            exit();
         }
     } else {
-        echo "No user found with that username.";
+        header('Location: process_login.php?error=User not found');
+        exit();
     }
-
-    $stmt->close();
 }
-
-$conn->close();
 ?>
 
 

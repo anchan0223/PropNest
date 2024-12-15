@@ -1,61 +1,96 @@
 <?php
 session_start();
-if (!isset($_SESSION['user_id'])) {
-    // If not logged in, redirect to login page
-    header("Location: login.html");
-    exit();
-}
+include('db.php');  // Include the database connection
 
-$userID = $_SESSION['user_id'];
-$host = "localhost";
-$user = "aharvey30";
-$pass = "aharvey30";
-$dbname = "aharvey30";
+// Temporary: Set a default user ID for testing
+$_SESSION['user_id'] = 1; // Replace 1 with an appropriate user ID from your database
 
-// Database connection
-$conn = new mysqli($host, $user, $pass, $dbname);
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+// Handle form submission to add a property
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Get form values and sanitize inputs
+    $user_id = $_SESSION['user_id'];
+    $location = $_POST['location'];
+    $price = $_POST['price'];
+    $bedrooms = $_POST['bedrooms'];
+    $bathrooms = $_POST['bathrooms'];
+    $parking = isset($_POST['parking']) ? 1 : 0;
+    $garden = isset($_POST['garden']) ? 1 : 0;
+    $facilities = $_POST['facilities'];
 
-// Check if form is submitted
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    // Get the form data
-    $location = trim($_POST['location']);
-    $price = trim($_POST['price']);
-    $bedrooms = trim($_POST['bedrooms']);
-    $bathrooms = trim($_POST['bathrooms']);
-    $hasGarden = isset($_POST['hasGarden']) ? 1 : 0;
-    $hasParking = isset($_POST['hasParking']) ? 1 : 0;
-    $proximityFacilities = trim($_POST['proximityFacilities']);
+    // Handle image upload
+    $image_url = null;
+    if (isset($_FILES['property_image']) && $_FILES['property_image']['error'] === UPLOAD_ERR_OK) {
+        // Ensure the file is an image
+        $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif'];
+        $image_extension = pathinfo($_FILES['property_image']['name'], PATHINFO_EXTENSION);
+        
+        if (in_array(strtolower($image_extension), $allowed_extensions)) {
+            // Generate a unique name for the image to avoid overwriting
+            $image_name = uniqid() . '.' . $image_extension;
+            $image_path = 'uploads/' . $image_name;
+
+            // Move the uploaded image to the uploads directory
+            if (move_uploaded_file($_FILES['property_image']['tmp_name'], $image_path)) {
+                $image_url = $image_path;  // Save the path to the database
+            }
+        } else {
+            echo "Invalid image type. Allowed types are: jpg, jpeg, png, gif.";
+        }
+    }
+
+
+    // Insert property into the database
+    $query = "INSERT INTO properties (user_id, location, price, bedrooms, bathrooms, parking, garden, facilities, image_url) 
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+$stmt = $conn->prepare($query);
+$stmt->bind_param('isiiiiiss', $user_id, $location, $price, $bedrooms, $bathrooms, $parking, $garden, $facilities, $image_url);
+$stmt->execute();
+
+
     
-    // Get the image URL from the form
-    $imageURL = isset($_POST['image_url']) ? trim($_POST['image_url']) : null;
-
-    // Validate the image URL (optional)
-    if ($imageURL && !filter_var($imageURL, FILTER_VALIDATE_URL)) {
-        die("Invalid image URL provided.");
-    }
-
-    // Insert property details into the database
-    $sql = "INSERT INTO properties (user_id, location, price, bedrooms, bathrooms, parking, garden, facilities, image_url)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("isiiissss", $userID, $location, $price, $bedrooms, $bathrooms, $hasParking, $hasGarden, $proximityFacilities, $imageURL);
-
-    // Execute the query and check for success
-    if ($stmt->execute()) {
-        header("Location: ListingsPage.html");
-        exit();
-    } else {
-        echo "Error: " . $stmt->error;
-    }
-
-    $stmt->close();
+    // Redirect to dashboard after adding property
+    header('Location: dashboard.php');
+    exit;
 }
-
-// Close the database connection
-$conn->close();
 ?>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Property</title>
+    <link rel="stylesheet" href="css/property.css" />
+  </head>
+  <body>
+    <h1>Add Property</h1>
+    <form action="add_property.php" method="post" enctype="multipart/form-data">
+      <label for="location">Location:</label>
+      <input type="text" name="location" required /><br />
+
+      <label for="price">Price:</label>
+      <input type="number" step="0.01" name="price" required /><br />
+
+      <label for="bedrooms">Number of Bedrooms:</label>
+      <input type="number" name="bedrooms" required /><br />
+
+      <label for="bathrooms">Number of Bathrooms:</label>
+      <input type="number" name="bathrooms" required /><br />
+
+      <label for="parking">Has Parking:</label>
+      <input type="checkbox" name="parking" /><br />
+
+      <label for="garden">Has Garden:</label>
+      <input type="checkbox" name="garden" /><br />
+
+      <label for="facilities">Proximity to Facilities:</label>
+      <input type="text" name="facilities" /><br />
+
+      <label for="property_image">Image:</label>
+      <input type="file" id="property_image" name="property_image" accept="image/*">
+
+      <input type="submit" value="Add Property" />
+    </form>
+  </body>
+</html>
 
 
