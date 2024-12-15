@@ -1,0 +1,114 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(to bottom, #f4e2d8, #fad0c4);
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  max-width: 800px;
+  width: 100%;
+  padding: 20px;
+  background-color: #f9e6dd;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.container h1 {
+  font-size: 2.5em;
+  color: #333;
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  margin-bottom: 20px;
+}
+
+.property-details h2 {
+  font-size: 1.8em;
+  color: #333;
+  font-family: "Poppins", sans-serif;
+  margin-bottom: 15px;
+}
+
+.property-details p {
+  font-size: 1.2em;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.property-details p:nth-child(6) {
+  font-style: italic;
+}
+
+.property-details img.property-image {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  border-radius: 8px;
+  margin: 20px 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.buttons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.buttons .btn {
+  display: inline-block;
+  text-decoration: none;
+  padding: 10px 30px;
+  border-radius: 5px;
+  font-size: 1em;
+  font-weight: bold;
+  transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+  cursor: pointer;
+}
+
+.buttons .edit-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.buttons .edit-btn:hover {
+  background-color: #1e7e34;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.buttons .delete-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.buttons .delete-btn:hover {
+  background-color: #c82333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.buttons button {
+  border: none;
+  background: none;
+  padding: 0;
+}
+
+.buttons button a {
+  text-decoration: none;
+  font-weight: bold;
+}
